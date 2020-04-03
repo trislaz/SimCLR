@@ -3,7 +3,7 @@ import torch
 import torchvision
 import argparse
 
-from torch.utils.tensorboard import SummaryWriter
+from tensorboardX import SummaryWriter
 
 apex = False
 try:
@@ -17,6 +17,7 @@ except ImportError:
 from model import load_model, save_model
 from modules import NT_Xent
 from modules.transformations import TransformsSimCLR
+from modules import dataset, datasetWSI_simple
 from utils import mask_correlated_samples, post_config_hook
 
 #### pass configuration
@@ -73,6 +74,9 @@ def main(_run, _log):
         train_dataset = torchvision.datasets.CIFAR10(
             root, download=True, transform=TransformsSimCLR()
         )
+    elif args.dataset == "WSI":
+        train_dataset = datasetWSI_simple(
+            path=args.path, transform=TransformsSimCLR())
     else:
         raise NotImplementedError
 
